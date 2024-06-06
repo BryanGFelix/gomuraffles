@@ -38,25 +38,9 @@ const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}) => {
                 functionName: 'purchaseTicket',
                 args: [raffleID, numTicketsToPurchase],
                 value: ticketsValue
-            }).then((test) => {
-                console.log(test);
-            }).catch((err) => {
+            }).finally(() => {
                 setIsPurchasing(false);
             })
-            
-            contract.on("PurchasedRaffleTickets", (raffleId, participant, participantTickets) => {
-                setNumTicketsHeldContext(Number(participantTickets) + numTicketsHeldContext);
-                axiosInstance.post('/purchaseTickets', {
-                        raffleID: Number(raffleId),
-                        address: participant,
-                        numTickets: Number(participantTickets),
-                }).catch(() => {
-                    setIsPurchasing(false);
-                }).finally(() => {
-                    contract.removeAllListeners('PurchasedRaffleTickets');
-                });
-
-            });
 
             setTimeout(() => {
                 setIsPurchasing(false);                      
