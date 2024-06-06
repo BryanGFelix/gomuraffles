@@ -1,0 +1,147 @@
+.numTicketController {
+    border: 10px solid black;
+    border-bottom: none;
+    display: flex;
+}
+
+.numTicketInput {
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+    -webkit-appearance: none;
+}
+
+.numTicketInput::-webkit-outer-spin-button,
+.numTicketInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.numTicketInput[type=number] {
+    -moz-appearance: textfield;
+}
+
+.numTicketInput:focus {
+    outline: none;
+}
+
+.incrementButton, .decrementButton {
+    background: black;
+    border: none;
+    color: white;
+    font-size: 20px;
+    padding: 0 12px;
+}
+
+.incrementButton:hover, .decrementButton:hover {
+    cursor: pointer;
+    background: white;
+    color: black;
+}
+
+.decrementButton {
+    border-right: 10px solid black;
+}
+
+.incrementButton {
+    border-left: 10px solid black;
+}
+
+.decrementButton {
+    font-size: 25px;
+}
+
+.raffleCardContainer {
+    width: 300px;
+    min-width: 300px;
+    margin: 15px;
+}
+
+.raffleCard {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 20px 25px;
+    border: 10px solid black;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom: 0px solid black;
+    margin: 0;
+    min-height: 300px;
+    max-height: 300px;
+    justify-content: center;
+}
+
+.raffleCardLink {
+    text-decoration: none;
+}
+
+.raffleCardLink:hover {
+    background: black;
+}
+
+.raffleCardMinimalEnded {
+    border-bottom: 10px solid black;
+}
+
+.minimalContent {
+    font-size: 24px;
+    text-align: center;
+}
+
+.drawing {
+    padding-bottom: 30px;
+}
+
+
+.raffleSection {
+    padding-top: 10px;
+}
+
+.raffleLink {
+    text-decoration: none;
+    color: black;
+}
+
+.raffleLink:hover {
+    background: black;
+    color: white;
+}
+
+.title {
+    font-size: 25px;
+    padding-bottom: 10px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.raffleTime {
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.winnerList {
+    padding-left: 5px;
+}
+
+.download {
+    padding-top: 15px;
+    text-decoration: underline;
+}
+
+.download:hover {
+    cursor: pointer;
+}
+
+.address {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 270px;
+}

@@ -1,0 +1,18 @@
+.timeLeft {
+    background: black;
+    padding: 8px;
+    color: white;
+    align-self: center;
+}
+
+.redBackground {
+    background: red;
+}
+
+.yellowBackground {
+    background: #FFBF00;
+}
+
+.greenBackground {
+    background: #00A36C;
+}

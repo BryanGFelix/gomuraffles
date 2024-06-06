@@ -1,0 +1,13 @@
+.RaffleItems {
+    display: flex;
+    margin: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.infoText {
+    font-size: 32px;
+    text-align: center;
+    padding-top: 150px;
+}

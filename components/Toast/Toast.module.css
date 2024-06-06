@@ -1,0 +1,35 @@
+/* components/Toast.module.css */
+.toast {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: white;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  .info {
+    background-color: black;
+  }
+  
+  .success {
+    background-color: #4CAF50;
+  }
+  
+  .error {
+    background-color: #F44336;
+  }
+  
+  .warning {
+    background-color: #FF9800;
+  }
+  
+  @keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeout {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  

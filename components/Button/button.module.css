@@ -1,0 +1,25 @@
+.button {
+    font-family: inherit;
+    width: 100%;
+    padding: 15px 0px;
+    border: 10px solid black;
+    background: white;
+    font-size: 15px;
+}
+
+.button:hover {
+    background: black;
+    color: white;
+    cursor: pointer;
+}
+
+.button:disabled {
+    background: black;
+    color: white;
+}
+
+.buttonNav {
+    padding: 10px 10px;
+    border: 7px solid black;
+    margin-left: 5px;
+}

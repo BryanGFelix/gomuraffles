@@ -1,0 +1,96 @@
+.rafflePageSubContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rafflePageContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+}
+
+@media (min-width: 768px) {
+    .rafflePageSubContainer {
+        justify-content: space-between;
+    }
+
+    .rafflePageContainer {
+        max-width: 700px;
+    }
+}
+
+.loadingText {
+    font-size: 32px;
+    text-align: center;
+    padding-top: 150px;
+    height: 100vh;
+}
+
+.raffleDetails {
+    margin: 15px;
+}
+
+.content {
+    padding-top: 20px;
+    margin: 0 auto;
+    border-left: 10px dashed black;
+    border-right: 10px dashed black;
+    height: 100%;
+}
+
+.title {
+    font-size: 36px;
+}
+
+.miniSection {
+    margin: 10px 0;
+}
+
+.sectionSubHeader {
+    font-size: 18px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px;
+    flex-wrap: wrap;
+}
+
+.frameLink {
+    border: 5px solid #472A91;
+    color: #472A91;
+    background: white;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.frameLink:hover {
+    cursor: pointer;
+    background: #472A91;
+    border: 5px solid #472A91;
+    color: white;
+}
+
+.duplicates {
+    background: black;
+    padding: 8px 8px;
+    color: white;
+    align-self: center;
+    width: max-content;
+    margin-bottom: 10px;
+}
+
+.section {
+    padding: 0 5px;
+}
+
+.sectionHeader {
+    font-size: 24px;
+    text-decoration: underline;
+}
+
+.sectionSubHeader {
+
+}

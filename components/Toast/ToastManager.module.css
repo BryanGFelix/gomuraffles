@@ -1,0 +1,11 @@
+/* components/ToastManager.module.css */
+.toastContainer {
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  

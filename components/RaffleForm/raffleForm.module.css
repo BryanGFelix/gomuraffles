@@ -1,0 +1,56 @@
+.raffleFormContainer {
+    width: 350px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.raffleForm {
+    border: 10px solid black;
+    padding: 20px;
+    border-bottom: none;
+}
+
+.raffleSection {
+    margin: 10px 0;
+}
+
+.raffleSectionCheckbox {
+    display: flex;
+    margin: 10px 0;
+}
+
+.checkbox {
+    height: 100%;
+}
+
+.checkboxText {
+    margin-left: 5px;
+}
+
+.raffleSectionInput {
+    margin-top: 3px;
+    width: 100%;
+}
+
+.error {
+    color: red;
+}
+
+.button {
+    font-family: inherit;
+    width: 100%;
+    padding: 15px 0px;
+    border: 10px solid black;
+    background: white;
+    font-size: 15px;
+}
+
+.button:hover {
+    background: black;
+    color: white;
+    cursor: pointer;
+}
+.raffleEnd {
+    margin: 5px 0 20px;
+}
