@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { useWriteContract, useAccount } from "wagmi";
 import Button from "../Button/Button";
-import { contract } from "@/utils/contract";
 import RaffleAbi from '../../abis/Raffle.json';
 import styles from './raffleCard.module.css';
 import { ethers } from "ethers";
 import { usePurchaseControlsContext } from "@/hooks/purchaseControlsContext";
-import axiosInstance from "@/utils/axios";
 import {
     useConnectModal,
   } from '@rainbow-me/rainbowkit';
 
-const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}) => {
+type PurchaseTicketsControlsProps = {
+    limit: number;
+    ticketPrice: string;
+    raffleID: number;
+}
+
+const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}: PurchaseTicketsControlsProps) => {
     const account = useAccount();
     const { openConnectModal } = useConnectModal();
     const { data: hash, writeContractAsync } = useWriteContract();
@@ -60,16 +64,16 @@ const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}) => {
         }
     }
 
-    const handleChange = (event) => {
+    const handleChange = (event: { target: { value: any; }; }) => {
         const value = event.target.value;
         // Check if the string is empty or only digits
         if (value === '' || /^\d+$/.test(value)) {
-            setNumTicketsToPurchase(value === '' ? '' : parseInt(value, 10));
+            setNumTicketsToPurchase(value === '' ? 0 : parseInt(value, 10));
         }
     };
 
     const handleBlur = () => {
-        if (numTicketsToPurchase === '' || numTicketsToPurchase === 0) {
+        if (Number(numTicketsToPurchase) === 0) {
             setNumTicketsToPurchase(1);  // Reset to 1 if the field is empty or 0
         }
     };

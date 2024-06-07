@@ -8,7 +8,17 @@ import axiosInstance from '@/utils/axios';
 import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
 
-const RaffleCard = ({raffleData}) => {
+type RaffleData = {
+    totalTickets: number;
+    ticketPrice: string;
+    timeStarted: number;
+    duration: number;
+    isActive: boolean;
+    id: number;
+    title: string;
+}
+
+const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
     const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title } = raffleData;
     const [drawingWinners, setDrawingWinners] = useState(false);
     const [isRaffleActive, setIsRaffleActive] = useState(isActive);

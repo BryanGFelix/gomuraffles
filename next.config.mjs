@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    ignoreBuildErrors: true,
     env: {
       ALCHEMY_RPC_PROVIDER_SEPOLIA: process.env.ALCHEMY_RPC_PROVIDER_SEPOLIA,
       PRIVATE_KEY: process.env.PRIVATE_KEY,

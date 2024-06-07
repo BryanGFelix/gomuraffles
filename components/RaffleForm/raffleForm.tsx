@@ -45,7 +45,7 @@ const RaffleForm = () => {
 
     const router = useRouter();
 
-    const getFutureDate = (hours) => {
+    const getFutureDate = (hours: number) => {
         const currentDate = moment();  // This gets the current date and time
         const futureDate = currentDate.add(hours, 'hours');  // Adds the specified number of hours
     
@@ -166,7 +166,7 @@ const RaffleForm = () => {
                         </div>
                         <div className={styles.raffleSectionCheckbox}>
                             <Field name="showMaxTickets" type="checkbox" className={styles.checkbox}
-                            onChange={(e) => {
+                            onChange={(e: { target: { checked: any; }; }) => {
                                 setFieldValue("maxTickets", null);
                                 setFieldValue("showMaxTickets", e.target.checked);
                             }}/>
@@ -186,7 +186,7 @@ const RaffleForm = () => {
                         }
                         <div className={styles.raffleSectionCheckbox}>
                             <Field name="showMaxEntries" type="checkbox"
-                            onChange={(e) => {
+                            onChange={(e: { target: { checked: any; }; }) => {
                                 setFieldValue("maxEntries", null);
                                 setFieldValue("showMaxEntries", e.target.checked);
                             }}/>
