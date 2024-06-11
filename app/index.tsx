@@ -32,6 +32,7 @@ const Home = () => {
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <RainbowKitProvider>
+              <div id="modal-root"/>
               <Layout>
                 <RaffleForm />
               </Layout>

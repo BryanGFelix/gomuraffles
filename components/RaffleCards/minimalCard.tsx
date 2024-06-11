@@ -5,8 +5,8 @@ import { hasRaffleEnded } from '@/utils/utils';
 
 type MinimalCardProps = {
     limit: number;
-    ticketPrice: number;
-    raffleID: number | string;
+    ticketPrice: string;
+    raffleID: number;
     isActive: boolean;
     timeStarted: number;
     duration: number;
@@ -20,6 +20,7 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
     const hasLimit = limit > 0;
 
     const getTicketsHeld = () => {
+        console.log(numTicketsHeldContext);
         const ticketsHeld = hasLimit ? `${numTicketsHeldContext} / ${limit}` : numTicketsHeldContext;
         return (
             <>

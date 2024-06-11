@@ -15,14 +15,19 @@ export const usePurchaseControlsContext = () => {
   return context;
 };
 
-export const PurchaseControlsProvider: React.FC = ({ children, numTicketsHeld }) => {
-    const [numTicketsHeldContext, setNumTicketsHeldContext] = useState<number>(numTicketsHeld || 0);
-  
-    return (
-      <PurchaseControlsContext.Provider value={{ numTicketsHeldContext, setNumTicketsHeldContext }}>
-        {children}
-      </PurchaseControlsContext.Provider>
-    );
-  };
+interface PurchaseControlsProviderInterface {
+  children: JSX.Element,
+  numTicketsHeld: number,
+}
+
+export const PurchaseControlsProvider: React.FC = ({ children, numTicketsHeld }: PurchaseControlsProviderInterface) => {
+  const [numTicketsHeldContext, setNumTicketsHeldContext] = useState<number>(Number(numTicketsHeld) || 0);
+
+  return (
+    <PurchaseControlsContext.Provider value={{ numTicketsHeldContext, setNumTicketsHeldContext }}>
+      {children}
+    </PurchaseControlsContext.Provider>
+  );
+};
 
 export default PurchaseControlsContext;

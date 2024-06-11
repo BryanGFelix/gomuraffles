@@ -2,11 +2,11 @@ import Button from '../Button/Button';
 import styles from './raffleCard.module.css';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { contract } from '@/utils/contract';
 import Link from 'next/link';
 import axiosInstance from '@/utils/axios';
 import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
+import Modal from '../Modal/modal';
 
 type RaffleData = {
     totalTickets: number;
@@ -25,17 +25,21 @@ const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
     const [raffleWinners, setRaffleWinners] = useState([]);
     const [viewingWinners, setViewingWinners] = useState(false);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
     const chooseWinners = () => {
+        closeModal();
         setDrawingWinners(true);
         axiosInstance.post('/drawWinners', {
             id: Number(id),
           }).then((response) => {
-            contract.on("WinnersSelected", (raffleID, winners, event) => {
-                setIsRaffleActive(false);
-                setRaffleWinners(winners);
-                setViewingWinners(true);
-                setDrawingWinners(false);
-            });
+            setRaffleWinners(response.data.winners);
+            setIsRaffleActive(false)
+          }).finally(() => {
+            setDrawingWinners(false);
           })
     }
 
@@ -113,10 +117,18 @@ const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
                     {viewingWinners ? 'Back' : 'View Winners'}
                 </Button>
                 :
-                <Button onClick={chooseWinners} disabled={drawingWinners}>
+                <Button onClick={openModal} disabled={drawingWinners}>
                     {drawingWinners ? 'Drawing...' : 'Draw Winners'}
                 </Button>
             }
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <p className={styles.modalText}>Are you sure you want to draw the winners for your raffle?</p>
+                <p className={styles.modalTitle}>{title}</p>
+                <div className={styles.modalButtons}>
+                    <Button onClick={chooseWinners} className='drawWinnersModalButton'>Confirm</Button>
+                    <Button onClick={closeModal} className='drawWinnersModalButton'>Close</Button>
+                </div>
+            </Modal>
         </div>
     )
 }

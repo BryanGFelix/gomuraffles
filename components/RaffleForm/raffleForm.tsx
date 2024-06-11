@@ -97,6 +97,7 @@ const RaffleForm = () => {
                         })
 
                         contract.on("RaffleCreated", (id, owner, ticketPrice, allowDuplicates, maxTickets, maxEntries, numWinners, isActive, duration, timeStarted) => {
+                            console.log('ID: ', id);
                             axiosInstance.post('/createRaffle', {
                                 raffleID: Number(id),
                                 owner,

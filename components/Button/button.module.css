@@ -23,3 +23,17 @@
     border: 7px solid black;
     margin-left: 5px;
 }
+
+.modalButton {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.ownerControls {
+    max-width: 150px;
+    padding: 10px 0;
+}
+
+.ownerControls:first-child {
+    margin-right: 15px;
+}

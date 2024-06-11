@@ -8,6 +8,8 @@ import { usePurchaseControlsContext } from "@/hooks/purchaseControlsContext";
 import {
     useConnectModal,
   } from '@rainbow-me/rainbowkit';
+import Big from 'big.js';
+import { contract } from "@/utils/contract";
 
 type PurchaseTicketsControlsProps = {
     limit: number;
@@ -35,25 +37,44 @@ const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}: PurchaseTickets
         } else {
             if (disablePurchase) return;
             setIsPurchasing(true);
-            const ticketsValue = ethers.parseEther((Number(ticketPrice) * numTicketsToPurchase).toString());
-            writeContractAsync({
-                address: process.env.CONTRACT_ADDRESS as `0x${string}`,
-                abi: RaffleAbi,
-                functionName: 'purchaseTicket',
-                args: [raffleID, numTicketsToPurchase],
-                value: ticketsValue
-            }).finally(() => {
+
+            try {
+                const ticketsValue = ethers.parseEther((Big(ticketPrice).times(numTicketsToPurchase).toString()));
+                writeContractAsync({
+                    address: process.env.CONTRACT_ADDRESS as `0x${string}`,
+                    abi: RaffleAbi,
+                    functionName: 'purchaseTicket',
+                    args: [raffleID, numTicketsToPurchase],
+                    value: ticketsValue
+                }).finally(() => {
+                    setIsPurchasing(false);
+                }).catch((err) => {
+                    console.log(err)
+                })
+
+                contract.on('PurchasedRaffleTickets', async (id, address, numEntries, totalTickets, participantTickets) => {
+                    if (Number(id) === raffleID) {
+                        setNumTicketsHeldContext(participantTickets);
+                        contract.off('PurchasedRaffleTickets')
+                    }
+                });
+            } catch (err) {
+                console.log(err);
                 setIsPurchasing(false);
-            })
+            }
+           
 
             setTimeout(() => {
                 setIsPurchasing(false);                      
-            }, 15000);
+            }, 10000);
         }
     }
 
     const handleIncrement = () => {
         const newTickets = numTicketsToPurchase + 1;
+        console.log('LIMIT', limit);
+        console.log('NEW TICKETS', newTickets);
+        console.log('TICKTS HELD', numTicketsHeldContext);
         if (limit > 0 && (limit < newTickets || limit - numTicketsHeldContext < newTickets)) return;
         setNumTicketsToPurchase(newTickets);
     }
