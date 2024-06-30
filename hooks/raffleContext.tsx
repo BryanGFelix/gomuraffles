@@ -2,7 +2,7 @@ import axiosInstance from "@/utils/axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type RaffleData = {
-    id?: number,
+    id?: string,
     owner: string,
     title: string,
     description: string,
@@ -39,7 +39,7 @@ export const useRaffleContext = () => {
 
 interface RaffleProviderInterface {
     children: JSX.Element,
-    raffleID: number,
+    raffleID: string,
     address: string | null
 }
 

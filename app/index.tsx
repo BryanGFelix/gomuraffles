@@ -14,6 +14,7 @@ import {
 import Layout from '@/components/layout';
 import { Pixelify_Sans } from 'next/font/google';
 import RaffleForm from '@/components/RaffleForm/raffleForm';
+import ToastManager from '@/components/Toast/ToastManager';
 
 const config = getDefaultConfig({
     appName: 'GomaRaffles',
@@ -34,6 +35,7 @@ const Home = () => {
             <RainbowKitProvider>
               <div id="modal-root"/>
               <Layout>
+                <ToastManager />
                 <RaffleForm />
               </Layout>
             </RainbowKitProvider>

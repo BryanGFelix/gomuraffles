@@ -13,6 +13,7 @@ const RafflePage = () => {
 
     const {
         owner,
+        totalTickets,
         maxTotalTickets,
         maxEntries,
         ticketPrice,
@@ -23,17 +24,16 @@ const RafflePage = () => {
         timeStarted,
         isActive,
         numWinners,
-        allowDuplicates
+        allowDuplicates,
+        wasCancelled
     } = raffleData;
-
-    console.log(raffleData);
 
     const handleCopyFrameLink = () => {
         window.addToast('Copied Link', 'info');
     }
 
     const raffleOwnerBaseScanLink = `https://basescan.org/address/${owner}`;
-    const totalTickets =  maxTotalTickets > 0 ? maxTotalTickets : 'Unlimited';
+    const maxTickets =  maxTotalTickets > 0 ? maxTotalTickets : 'Unlimited';
     const ticketsPerParticipant = maxEntries > 0 ? maxEntries : 'Unlimited';
     const ticketPriceText =  Number(ticketPrice) > 0 ? `${ticketPrice} ETH` : 'FREE';
 
@@ -43,13 +43,18 @@ const RafflePage = () => {
                 {!fetchingRaffle && !raffleData && <p className={styles.loadingText}>Could not retrieve Raffle data</p>}
                 {id &&
                     <div>
-                        {owner === account.address &&  <OwnerControls/>}
+                        {owner === account.address && isActive && (
+                            <div className={styles.ownerControlsContainer}>
+                                <OwnerControls/>
+                            </div>
+                        )}
                         <PurchaseControlsProvider numTicketsHeld={userTickets}>
                             <div className={styles.rafflePageContainer}>
                                 <div className={styles.header}>
-                                    <h2 className={styles.title}>{title} (ID: {id})</h2>
+                                    <h2 className={styles.title}>{title}</h2>
                                     <TimeLeft timeStarted={timeStarted} duration={duration}/>
                                 </div>
+                                <p className={styles.id}>ID: {id}</p>
                                 <div className={styles.rafflePageSubContainer}>
                                     <MinimalCard 
                                         limit={maxEntries}
@@ -58,6 +63,7 @@ const RafflePage = () => {
                                         isActive={isActive}
                                         timeStarted={timeStarted}
                                         duration={duration}
+                                        wasCancelled={wasCancelled}
                                     />
                                     <div className={styles.raffleDetails}>
                                         {allowDuplicates && <p className={styles.duplicates}>Allows Duplicates</p>}
@@ -85,7 +91,7 @@ const RafflePage = () => {
                                             </div>
                                             <div className={styles.miniSection}>
                                                 <h4 className={styles.sectionSubHeader}>Number of Tickets Sold</h4>
-                                                <p>{totalTickets} / {totalTickets}</p>
+                                                <p>{totalTickets} / {maxTickets}</p>
                                             </div>
                                         </div>
                                         <button className={styles.frameLink} onClick={handleCopyFrameLink}>Copy Frames Link</button>

@@ -14,12 +14,20 @@ const RaffleStatus = (props: RaffleStatusProps) => {
     } = props;
 
     const raffleHasEnded = hasRaffleEnded(timeStarted, duration);
+
+    const getRaffleStatus = () => {
+        if (!isActive) {
+            return 'Ended';
+        } else if (raffleHasEnded && isActive) {
+            return 'Drawing';
+        } else {
+            return 'Running';
+        }
+    }
     
     return (
         <div>
-            {!isActive && <p>Ended</p>}
-            {raffleHasEnded && isActive && <p>Drawing</p>}
-            {!raffleHasEnded && isActive && <p>Running</p>}
+            {getRaffleStatus()}
         </div>
     );
 }

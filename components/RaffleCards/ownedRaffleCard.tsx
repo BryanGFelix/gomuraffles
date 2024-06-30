@@ -1,12 +1,10 @@
 import Button from '../Button/Button';
 import styles from './raffleCard.module.css';
 import { useState } from 'react';
-import * as XLSX from 'xlsx';
+
 import Link from 'next/link';
-import axiosInstance from '@/utils/axios';
 import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
-import Modal from '../Modal/modal';
 
 type RaffleData = {
     totalTickets: number;
@@ -14,64 +12,21 @@ type RaffleData = {
     timeStarted: number;
     duration: number;
     isActive: boolean;
+    wasCancelled: boolean;
     id: number;
     title: string;
 }
 
 const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
-    const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title } = raffleData;
-    const [drawingWinners, setDrawingWinners] = useState(false);
-    const [isRaffleActive, setIsRaffleActive] = useState(isActive);
-    const [raffleWinners, setRaffleWinners] = useState([]);
-    const [viewingWinners, setViewingWinners] = useState(false);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
-
-    const chooseWinners = () => {
-        closeModal();
-        setDrawingWinners(true);
-        axiosInstance.post('/drawWinners', {
-            id: Number(id),
-          }).then((response) => {
-            setRaffleWinners(response.data.winners);
-            setIsRaffleActive(false)
-          }).finally(() => {
-            setDrawingWinners(false);
-          })
-    }
-
-    const viewWinners = () => {
-        setViewingWinners(!viewingWinners);
-    }
-
-    const downloadExcel = () => {
-        // Convert array of strings to an array of objects with a single property for each
-        const formattedData = raffleWinners.map(address => ({ Address: address }));
-
-        // Create a new workbook and worksheet
-        const workbook = XLSX.utils.book_new();
-        const worksheet = XLSX.utils.json_to_sheet(formattedData);
-
-        // Add the worksheet to the workbook
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Addresses");
-
-        // Define a file name
-        const fileName = "raffleData.xlsx";
-
-        // Write the workbook to a file and trigger download
-        XLSX.writeFile(workbook, fileName);
-    };
+    const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, wasCancelled } = raffleData;
 
     const getBaseRaffleCardData = () => (
         <Link href={`/raffle/${id}`} className={styles.raffleLink}>
             <div className={`${styles.raffleCard} ${styles.raffleCardLink}`}>
                 <h2 className={styles.title}>{title}</h2>
                 <div className={styles.raffleSection}>
-                    <h3 className={styles.sectionTitle}>Raffle ID:</h3>
-                    <p>{id}</p>
+                    <h3 className={styles.sectionTitle}>ID:</h3>
+                    <p className={styles.raffleID}>{id}</p>
                 </div>
                 <div className={styles.raffleSection}>
                     <h3 className={styles.sectionTitle}>Ticket Price:</h3>
@@ -93,42 +48,22 @@ const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
         </Link>
     )
 
-    const getViewWinnersRaffleCardData = () => {
-        return (
-            <div className={styles.raffleCard}>
-                <h2 className={styles.title}>Winners ({raffleWinners.length})</h2>
-                <div className={styles.winnerList}>
-                    {raffleWinners.slice(0, 10).map((winner, index) => (
-                        <p className={styles.address}>{index + 1}. {winner}</p>
-                    ))}
-                    {raffleWinners.length > 10  && <p>...</p>}
-                </div>
-                <p className={styles.download} onClick={downloadExcel}>Download Spreadsheet</p>
-            </div>
-        );
+    const getButtonText = () => {
+        if(!isActive) {
+            return 'Completed';
+        } else if (wasCancelled) {
+            return 'Cancelled';
+        } else {
+            return 'In Progress...'
+        }
     }
 
     return (
         <div className={styles.raffleCardContainer}>
-            {!viewingWinners && getBaseRaffleCardData()}
-            {viewingWinners && getViewWinnersRaffleCardData()}
-            {!isRaffleActive ?
-                <Button onClick={viewWinners}>
-                    {viewingWinners ? 'Back' : 'View Winners'}
-                </Button>
-                :
-                <Button onClick={openModal} disabled={drawingWinners}>
-                    {drawingWinners ? 'Drawing...' : 'Draw Winners'}
-                </Button>
-            }
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <p className={styles.modalText}>Are you sure you want to draw the winners for your raffle?</p>
-                <p className={styles.modalTitle}>{title}</p>
-                <div className={styles.modalButtons}>
-                    <Button onClick={chooseWinners} className='drawWinnersModalButton'>Confirm</Button>
-                    <Button onClick={closeModal} className='drawWinnersModalButton'>Close</Button>
-                </div>
-            </Modal>
+            {getBaseRaffleCardData()}
+            <Button disabled={true}>
+                {getButtonText()}
+            </Button>
         </div>
     )
 }

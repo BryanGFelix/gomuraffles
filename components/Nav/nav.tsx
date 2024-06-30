@@ -18,10 +18,13 @@ const Nav = () => {
             </Link>
             <div className={styles.actionContainer}>
                 <Link href='/' className={styles.link}>
-                    Create Raffle
+                    Create
                 </Link>
-                <Link href='/myraffles' className={styles.link}>
-                    My Raffles
+                <Link href='/owned' className={styles.link}>
+                    Owned
+                </Link>
+                <Link href='/joined' className={styles.link}>
+                    Joined
                 </Link>
                 <ConnectButton.Custom>
                     {({

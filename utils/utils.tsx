@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const formatTimeLeft = (timeStarted: number, duration: number) => {
     const now = Math.floor(Date.now() / 1000); // Current time in seconds
     const endTime = timeStarted + duration;
@@ -24,4 +26,10 @@ export const formatTimeLeft = (timeStarted: number, duration: number) => {
 export const hasRaffleEnded = (timeStarted: number, duration: number) => {
     const timeToEnd = Number(timeStarted) + Number(duration);
     return Date.now() / 1000 > timeToEnd;
+}
+
+export const getUUIDByte16 = () => {
+    const uuid = uuidv4();
+    const stripped = uuid.replace(/-/g, ''); // Remove hyphens
+    return `0x${stripped.slice(0, 32)}`; // Take the first 16 bytes (32 hex characters)
 }

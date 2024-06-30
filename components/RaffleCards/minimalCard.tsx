@@ -2,25 +2,50 @@ import styles from './raffleCard.module.css';
 import PurchaseTicketsControls from './purchaseTicketsControls';
 import { usePurchaseControlsContext } from '@/hooks/purchaseControlsContext';
 import { hasRaffleEnded } from '@/utils/utils';
+import { useEffect, useState } from 'react';
+import { downloadExcel } from './utils';
+import axiosInstance from '@/utils/axios';
 
 type MinimalCardProps = {
     limit: number;
     ticketPrice: string;
-    raffleID: number;
+    raffleID: string;
     isActive: boolean;
     timeStarted: number;
     duration: number;
-    hasWon: boolean;
+    wasCancelled: boolean;
 }
 
-const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, duration, hasWon}: MinimalCardProps) => {
+const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, duration, wasCancelled}: MinimalCardProps) => {
+    const raffleHasEnded = hasRaffleEnded(timeStarted, duration);
+
+    const [winners, setWinners] = useState([]);
+    const [fetching, setFetching] = useState(false);
+    
+    useEffect(() => {
+        viewWinners();
+    }, []);
+
+    const viewWinners = () => {
+        if(!isActive && !wasCancelled) {
+            setFetching(true);
+            axiosInstance.post('/getWinners', {
+                id: raffleID,
+            }).then((response) => {
+                setFetching(false);
+                if(response.data) {
+                    setWinners(response.data);
+                }
+            }).catch(() => {
+                setFetching(false);
+            });
+        }
+    }
 
     const { numTicketsHeldContext } = usePurchaseControlsContext();
-    const raffleHasEnded = hasRaffleEnded(timeStarted, duration);
     const hasLimit = limit > 0;
 
     const getTicketsHeld = () => {
-        console.log(numTicketsHeldContext);
         const ticketsHeld = hasLimit ? `${numTicketsHeldContext} / ${limit}` : numTicketsHeldContext;
         return (
             <>
@@ -31,10 +56,21 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
     }
 
     const getMinimalContent = () => {
-        if (!isActive) {
-            return (
-                <p>{hasWon ? 'YOU WON' : 'YOU LOST'}</p>
-            );
+        if(fetching) {
+            return <p className={styles.drawing}>Fetching Winners...</p>
+        } else if(!isActive && !wasCancelled) {
+            return <>
+                <h2 className={styles.title}>Winners ({winners.length})</h2>
+                <div className={styles.winnerList}>
+                    {winners.slice(0, 10).map((winner, index) => (
+                        <p className={styles.address}>{index + 1}. {winner}</p>
+                    ))}
+                    {winners.length > 10  && <p>...</p>}
+                </div>
+                <p className={styles.download} onClick={downloadExcel}>Download Spreadsheet</p>
+            </>
+        } else if (wasCancelled) {
+            return <p className={styles.drawing}>Cancelled</p>;
         } else if (isActive && raffleHasEnded) {
             return (
                 <>
@@ -49,7 +85,7 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
 
     return (
         <div className={styles.raffleCardContainer}>
-            <div className={`${styles.raffleCard} ${raffleHasEnded ? styles.raffleCardMinimalEnded : ''}`}>
+            <div className={`${styles.raffleCard} ${raffleHasEnded ? styles.raffleHasEnded : ''}`}>
                 <div className={styles.minimalContent}>
                     {getMinimalContent()}
                 </div>

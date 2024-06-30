@@ -6,18 +6,14 @@ import { useState } from 'react';
 import {
     useConnectModal,
   } from '@rainbow-me/rainbowkit';
-import { useAccount, useWriteContract } from 'wagmi';
-import RaffleAbi from '../../abis/Raffle.json';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import RaffleAbi from '@/abis/Raffle.json';
 import { ethers } from "ethers";
-import { contract } from '@/utils/contract';
 import { useRouter} from "next/navigation"
-import axiosInstance from "@/utils/axios";
+import { logTransaction, monitorTransaction, updateTransactionStatus, waitForTransactionReceipt } from '@/utils/transactions';
+import { getUUIDByte16 } from '@/utils/utils';
 
 const CreateRaffleSchema = Yup.object().shape({
-    title: Yup.string()
-      .min(2, 'Title must be at least 2 characters')
-      .max(30, 'Title must be less than 30 characters')
-      .required('Required'),
     ticketPrice: Yup.number()
       .max(999, 'This price is unreasonable!')
       .min(0, 'Price must be greater than 0')
@@ -41,7 +37,7 @@ const RaffleForm = () => {
     const account = useAccount();
     const [isCreatingRaffle, setIsCreatingRaffle] = useState(false);
     const { openConnectModal } = useConnectModal();
-    const { data: hash, writeContractAsync } = useWriteContract()
+    const { data, writeContractAsync } = useWriteContract();
 
     const router = useRouter();
 
@@ -51,14 +47,78 @@ const RaffleForm = () => {
     
         return futureDate.format('MM-DD-YYYY HH:mm');  // Formatting the date-time string
     }
-    
+
+    const handleSubmit = async (values) => {
+        if (!account.address) {
+            if (openConnectModal) {
+                openConnectModal();
+            }
+            return;
+        }
+
+        setIsCreatingRaffle(true);
+
+        setTimeout(() => {
+            setIsCreatingRaffle(false);                      
+        }, 15000)
+
+        const ticketPriceInWei = ethers.parseEther(values.ticketPrice.toString());
+        let durationToSeconds = 0;
+        if (values.duration) {
+            durationToSeconds = 3600 * values.duration;
+        }
+
+        const maxEntries = values.maxEntries || 0;
+        const maxTickets = values.maxTickets || 0;
+
+        try {
+            const uuid = getUUIDByte16();
+            // Send the transaction
+            const hash = await writeContractAsync({
+                address: process.env.CONTRACT_ADDRESS as `0x${string}`,
+                abi: RaffleAbi,
+                functionName: 'createRaffle',
+                args: [ 
+                    uuid,
+                    ticketPriceInWei,
+                    maxEntries,
+                    values.numWinners,
+                    durationToSeconds,
+                    maxTickets,
+                    values.allowDuplicates 
+                ],
+            });
+
+            await logTransaction(hash, 'create_raffle', account.address, uuid);
+            
+            const status = await waitForTransactionReceipt(hash, 2);
+            if (status === 1) {
+                window.addToast(
+                    'Raffle Created!',
+                    'success',
+                    15000,
+                    {
+                      label: 'View',
+                      onClick: () => {
+                        router.push(`/raffle/${uuid}`);
+                      },
+                    }
+                );
+            } else {
+                await updateTransactionStatus(hash, 'FAILED');
+            }
+            
+        } catch (error) {
+            console.error('Error handling raffle creation:', error);
+        } finally {
+            setIsCreatingRaffle(false);
+        }
+    };
 
     return (
         <div className={styles.raffleFormContainer}>
             <Formik
             initialValues={{
-                title: '',
-                description: '',
                 ticketPrice: 0,
                 numWinners: 1,
                 duration: null,
@@ -69,76 +129,11 @@ const RaffleForm = () => {
                 showMaxTickets: false,
             }}
             validationSchema={CreateRaffleSchema}
-            onSubmit={(values, actions) => {
-                if (!account.address) {
-                    if(openConnectModal) {
-                        openConnectModal();
-                    }  
-                } else {
-                    try {
-                        setIsCreatingRaffle(true);
-                        // same shape as initial values
-                        const ticketPriceInWei = ethers.parseEther(values.ticketPrice.toString());
-                        let durationToSeconds = 0;
-                        if (values.duration) {
-                            durationToSeconds = 3600 * values.duration;
-                        }
-        
-                        const maxEntries = values.maxEntries ? BigInt(values.maxEntries) : 0;
-                        const maxTickets = values.maxTickets ? BigInt(values.maxTickets) : 0;
-
-                        writeContractAsync({
-                            address: process.env.CONTRACT_ADDRESS as `0x${string}`,
-                            abi: RaffleAbi,
-                            functionName: 'createRaffle',
-                            args: [ ticketPriceInWei, maxEntries, values.numWinners, durationToSeconds, maxTickets, values.allowDuplicates ],
-                        }).catch(() => {
-                            setIsCreatingRaffle(false);
-                        })
-
-                        contract.on("RaffleCreated", (id, owner, ticketPrice, allowDuplicates, maxTickets, maxEntries, numWinners, isActive, duration, timeStarted) => {
-                            console.log('ID: ', id);
-                            axiosInstance.post('/createRaffle', {
-                                raffleID: Number(id),
-                                owner,
-                                ticketPrice: ticketPrice.toString(),
-                                allowDuplicates,
-                                maxTickets: Number(maxTickets),
-                                maxEntries: Number(maxEntries),
-                                numWinners: Number(numWinners),
-                                isActive,
-                                duration: Number(duration),
-                                timeStarted: Number(timeStarted),
-                                title: values.title,
-                                description: values.description,
-                            }).then(() => {
-                                setIsCreatingRaffle(false);
-                                router.push(`/raffle/${id}`);
-                            }).finally(() => {
-                                setIsCreatingRaffle(false);
-                                contract.removeAllListeners('RaffleCreated');
-                            });;
-                        });
-
-                        setTimeout(() => {
-                            setIsCreatingRaffle(false);                      
-                        }, 15000)
-                    } catch {
-                        setIsCreatingRaffle(false);
-                    }
-                }
-            }}
+            onSubmit={handleSubmit}
             >
             {({ errors, touched, values, isSubmitting, handleSubmit, setFieldValue }) => (
                 <Form onSubmit={handleSubmit}>
                     <div className={styles.raffleForm}>
-                        <div className={styles.raffleSection}>
-                            <h3 className={styles.raffleSectionHeader}>Raffle Title</h3>
-                            <Field name="title" type="string" className={styles.raffleSectionInput}/>
-                            {errors.title && touched.title && (
-                                <div className={styles.error}>{errors.title}</div>
-                            )}
-                        </div>
                         <div className={styles.raffleSection}>
                             <h3 className={styles.raffleSectionHeader}>Ticket Price (ETH)</h3>
                             <Field name="ticketPrice" type="number" step="any" min='0' className={styles.raffleSectionInput}/>

@@ -72,6 +72,10 @@
     justify-content: center;
 }
 
+.raffleHasEnded {
+    border-bottom: 10px solid black;
+}
+
 .raffleCardLink {
     text-decoration: none;
 }
@@ -80,7 +84,7 @@
     background: black;
 }
 
-.raffleCardMinimalEnded {
+.minimalBorder {
     border-bottom: 10px solid black;
 }
 
@@ -139,4 +143,9 @@
     overflow: hidden;
     white-space: nowrap;
     max-width: 270px;
+}
+
+.raffleID {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
 }

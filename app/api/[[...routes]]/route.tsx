@@ -4,7 +4,7 @@ import { Button, Frog, TextInput } from 'frog'
 import { devtools } from 'frog/dev'
 import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
-import RaffleAbi from '../../../abis/Raffle.json'
+import RaffleAbi from '@/abis/Raffle.json';
 import { http, createPublicClient } from "viem";
 import { baseSepolia } from 'viem/chains'
 import { ethers } from 'ethers';

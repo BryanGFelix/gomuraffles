@@ -2,12 +2,47 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    padding-top: 16px;
 }
 
 .rafflePageContainer {
     max-width: 400px;
     margin: 0 auto;
     padding-bottom: 100px;
+}
+
+.ownerControlsContainer {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 24px;
+}
+
+.id {
+    font-size: 16px;
+    text-align: center;
+}
+
+.content {
+    border: none;
+    padding-top: 20px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+@media (min-width: 420px) {
+    .id {
+        font-size: 18px;
+    }
+}
+
+@media (min-width: 615px) {
+    .content {
+        border-left: 10px dashed black;
+        border-right: 10px dashed black;
+    }
 }
 
 @media (min-width: 768px) {
@@ -17,6 +52,15 @@
 
     .rafflePageContainer {
         max-width: 700px;
+    }
+
+    .ownerControlsContainer {
+        max-width: 700px;
+    }
+
+    .id {
+        text-align: start;
+        margin: 0 15px;
     }
 }
 
@@ -29,18 +73,6 @@
 
 .raffleDetails {
     margin: 15px;
-}
-
-.content {
-    padding-top: 20px;
-    margin: 0 auto;
-    border-left: 10px dashed black;
-    border-right: 10px dashed black;
-    height: 100%;
-}
-
-.title {
-    font-size: 36px;
 }
 
 .miniSection {
@@ -56,6 +88,7 @@
     justify-content: space-between;
     margin: 15px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .frameLink {

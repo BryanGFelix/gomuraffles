@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useWriteContract, useAccount } from "wagmi";
 import Button from "../Button/Button";
-import RaffleAbi from '../../abis/Raffle.json';
+import RaffleAbi from '@/abis/Raffle.json';
 import styles from './raffleCard.module.css';
 import { ethers } from "ethers";
 import { usePurchaseControlsContext } from "@/hooks/purchaseControlsContext";
@@ -9,18 +9,18 @@ import {
     useConnectModal,
   } from '@rainbow-me/rainbowkit';
 import Big from 'big.js';
-import { contract } from "@/utils/contract";
+import { logTransaction, updateTransactionStatus, waitForTransactionReceipt } from "@/utils/transactions";
 
 type PurchaseTicketsControlsProps = {
     limit: number;
     ticketPrice: string;
-    raffleID: number;
+    raffleID: string;
 }
 
 const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}: PurchaseTicketsControlsProps) => {
     const account = useAccount();
     const { openConnectModal } = useConnectModal();
-    const { data: hash, writeContractAsync } = useWriteContract();
+    const { writeContractAsync } = useWriteContract();
     const { numTicketsHeldContext, setNumTicketsHeldContext } = usePurchaseControlsContext();
 
     const [numTicketsToPurchase, setNumTicketsToPurchase] = useState(1);
@@ -40,33 +40,35 @@ const PurchaseTicketsControls = ({limit, ticketPrice, raffleID}: PurchaseTickets
 
             try {
                 const ticketsValue = ethers.parseEther((Big(ticketPrice).times(numTicketsToPurchase).toString()));
-                writeContractAsync({
+                const hash = await writeContractAsync({
                     address: process.env.CONTRACT_ADDRESS as `0x${string}`,
                     abi: RaffleAbi,
                     functionName: 'purchaseTicket',
                     args: [raffleID, numTicketsToPurchase],
                     value: ticketsValue
-                }).finally(() => {
-                    setIsPurchasing(false);
-                }).catch((err) => {
-                    console.log(err)
-                })
-
-                contract.on('PurchasedRaffleTickets', async (id, address, numEntries, totalTickets, participantTickets) => {
-                    if (Number(id) === raffleID) {
-                        setNumTicketsHeldContext(participantTickets);
-                        contract.off('PurchasedRaffleTickets')
-                    }
                 });
+
+                const ticketsTotalValue = (Number(ticketPrice) * numTicketsToPurchase).toString();
+                await logTransaction(hash, 'purchase_ticket', account.address, raffleID, ticketsTotalValue);
+
+                const status = await waitForTransactionReceipt(hash, 2);
+                if (status === 1) {
+                    window.addToast(`Purchased ${numTicketsToPurchase} tickets`, 'success');
+                    setNumTicketsHeldContext(numTicketsHeldContext + numTicketsToPurchase);
+                } else {
+                    window.addToast(`Failed to purchase tickets`, 'error');
+                    await updateTransactionStatus(hash, 'failed');
+                }
+                setIsPurchasing(false);
             } catch (err) {
-                console.log(err);
+                window.addToast(`Failed to purchase tickets`, 'error');
                 setIsPurchasing(false);
             }
            
 
             setTimeout(() => {
                 setIsPurchasing(false);                      
-            }, 10000);
+            }, 15000);
         }
     }
 
