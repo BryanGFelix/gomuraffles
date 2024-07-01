@@ -1,4 +1,3 @@
-import { ethers } from 'ethers';
 import styles from './raffleCard.module.css';
 import Link from 'next/link';
 import PurchaseTicketsControls from './purchaseTicketsControls';
@@ -20,8 +19,8 @@ const JoinedRaffleCard = ({raffleData}: {raffleData: RaffleData}) => {
                 <div className={`${styles.raffleCard} ${styles.raffleCardLink}`}>
                     <h2 className={styles.title}>{title}</h2>
                     <div className={styles.raffleSection}>
-                        <h3 className={styles.sectionTitle}>Raffle ID:</h3>
-                        <p>{Number(id)}</p>
+                        <h3 className={styles.sectionTitle}>ID:</h3>
+                        <p>{id}</p>
                     </div>
                     <div className={styles.raffleSection}>
                         <h3 className={styles.sectionTitle}>Ticket Price:</h3>
