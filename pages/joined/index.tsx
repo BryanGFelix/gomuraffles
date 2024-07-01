@@ -23,7 +23,6 @@ const ParticipatingRafflesPage = () => {
     }, [account.address]);
 
     const fetchRaffles = (page: number) => {
-        console.log('HERE');
         setLoading(true);
         axiosInstance.post('/getJoinedRaffles', {
             user: account.address,

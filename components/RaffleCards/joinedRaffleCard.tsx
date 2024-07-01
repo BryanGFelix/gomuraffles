@@ -12,7 +12,7 @@ const JoinedRaffleCard = ({raffleData}: {raffleData: RaffleData}) => {
     const { numTicketsHeldContext } = usePurchaseControlsContext();
 
     const totalTicketsAvailable = maxTotalTickets > 0  ? maxTotalTickets - totalTickets : 'Unlimited';
-    const ticketPriceText = Number(ticketPrice) > 0 ? `${ethers.formatEther(ticketPrice)} ETH` : 'FREE';
+    const ticketPriceText = Number(ticketPrice) > 0 ? `${ticketPrice} ETH` : 'FREE';
 
     return (
         <div className={styles.raffleCardContainer}>
