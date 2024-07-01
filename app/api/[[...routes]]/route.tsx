@@ -161,8 +161,8 @@ app.frame('/raffle/:id', async(c) => {
     intents: [
       <TextInput placeholder='How many tickets would you like?'/>,
       <Button.Transaction target={`/purchaseTickets/raffle/${id}/${ticketPriceFormatted}`}>Purchase</Button.Transaction>,
-      <Button.Redirect location={`http://localhost:3000/raffle/${id}`}>View Details</Button.Redirect>,
-      <Button.Redirect location='http://localhost:3000/'>Create Raffle</Button.Redirect>
+      <Button.Redirect location={`https://www.gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
+      <Button.Redirect location='https://www.gomuraffles.com/'>Create Raffle</Button.Redirect>
     ],
   })
 })

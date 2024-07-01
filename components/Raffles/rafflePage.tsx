@@ -30,6 +30,7 @@ const RafflePage = () => {
     } = raffleData;
 
     const handleCopyFrameLink = () => {
+        navigator.clipboard.writeText(`https://www.gomuraffles.com/api/raffle/${id}`)
         window.addToast('Copied Link', 'info');
     }
 
