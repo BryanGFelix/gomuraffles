@@ -4,9 +4,12 @@ import Link from 'next/link';
 import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
 import { RaffleData } from '@/hooks/raffleContext';
+import Big from 'big.js';
 
 const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
     const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, wasCancelled } = raffleData;
+
+    const totalTicketPrice = (Big(ticketPrice).times(totalTickets).toString());
 
     const getBaseRaffleCardData = () => (
         <Link href={`/raffle/${id}`} className={styles.raffleLink}>
@@ -26,7 +29,7 @@ const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
                 </div>
                 <div className={styles.raffleSection}>
                     <h3 className={styles.sectionTitle}>Amount Raised</h3>
-                    <p>{Number(ticketPrice) * Number(totalTickets)} ETH</p>
+                    <p>{totalTicketPrice} ETH</p>
                 </div>
                 <div className={styles.raffleTime}>
                     <TimeLeft timeStarted={timeStarted} duration={duration} wasCancelled={wasCancelled}/>
