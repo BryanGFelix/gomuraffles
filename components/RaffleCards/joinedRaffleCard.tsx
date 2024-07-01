@@ -20,7 +20,7 @@ const JoinedRaffleCard = ({raffleData}: {raffleData: RaffleData}) => {
                     <h2 className={styles.title}>{title}</h2>
                     <div className={styles.raffleSection}>
                         <h3 className={styles.sectionTitle}>ID:</h3>
-                        <p>{id}</p>
+                        <p className={styles.raffleID}>{id}</p>
                     </div>
                     <div className={styles.raffleSection}>
                         <h3 className={styles.sectionTitle}>Ticket Price:</h3>
