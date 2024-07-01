@@ -32,7 +32,7 @@ export const monitorTransaction = async (hash: `0x${string}`) => {
     }
 };
 
-export const waitForTransactionReceipt = async (hash, confirmations = 2) => {
+export const waitForTransactionReceipt = async (hash: string, confirmations = 2) => {
     try {
         const receipt = await provider.waitForTransaction(hash, confirmations);
         return receipt?.status;
