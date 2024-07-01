@@ -1,8 +1,8 @@
 import axiosInstance from "@/utils/axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
-type RaffleData = {
-    id?: string,
+export type RaffleData = {
+    id: string,
     owner: string,
     title: string,
     description: string,
@@ -39,13 +39,14 @@ export const useRaffleContext = () => {
 };
 
 interface RaffleProviderInterface {
-    children: JSX.Element,
-    raffleID: string,
-    address: string | null
+  children: ReactNode;
+  raffleID: string | string[] | undefined;
+  address: `0x${string}` | undefined;
+
 }
 
 const defaultRaffleData: RaffleData = {
-    id: undefined,
+    id: '',
     owner: '',
     title: 'Loading...',
     description: 'Loading...',
@@ -59,13 +60,14 @@ const defaultRaffleData: RaffleData = {
     allowDuplicates: false,
     isActive: false,
     wasCancelled: false,
+    refunded: false,
     userTickets: 0,
     totalTickets: 0,
     numWinners: 0,
     numWins: 0,
   };
 
-export const RaffleProvider: React.FC = ({ children, raffleID, address }: RaffleProviderInterface) => {
+export const RaffleProvider: React.FC<RaffleProviderInterface> = ({ children, raffleID, address }: RaffleProviderInterface) => {
   const [raffleData, setRaffleData] = useState(defaultRaffleData);
   const [fetchingRaffle, setFetchingRaffle] = useState(false);
 

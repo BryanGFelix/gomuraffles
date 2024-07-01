@@ -5,12 +5,13 @@ import PurchaseTicketsControls from './purchaseTicketsControls';
 import { usePurchaseControlsContext } from '@/hooks/purchaseControlsContext';
 import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
+import { RaffleData } from '@/hooks/raffleContext';
 
-const JoinedRaffleCard = ({raffleData}) => {
-    const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, maxEntries, hasWon, maxTickets, numTicketsOwned, wasCancelled } = raffleData;
+const JoinedRaffleCard = ({raffleData}: {raffleData: RaffleData}) => {
+    const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, maxEntries, maxTotalTickets, wasCancelled } = raffleData;
     const { numTicketsHeldContext } = usePurchaseControlsContext();
 
-    const totalTicketsAvailable = maxTickets > 0  ? maxTickets - totalTickets : 'Unlimited';
+    const totalTicketsAvailable = maxTotalTickets > 0  ? maxTotalTickets - totalTickets : 'Unlimited';
     const ticketPriceText = Number(ticketPrice) > 0 ? `${ethers.formatEther(ticketPrice)} ETH` : 'FREE';
 
     return (

@@ -9,7 +9,7 @@ import { http, createPublicClient } from "viem";
 import { baseSepolia } from 'viem/chains'
 import { ethers } from 'ethers';
 import { formatTimeLeft, hasRaffleEnded } from '@/utils/utils';
-import { Box } from '../ui.ts'
+import { Box } from '../ui'
 import axiosInstance from '@/utils/axios'
 
 const app = new Frog({

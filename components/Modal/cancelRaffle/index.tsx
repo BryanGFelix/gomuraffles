@@ -13,10 +13,9 @@ import {
 type CancelRaffleModalProps = {
     isOpen: boolean;
     closeModal: () => void;
-    cancelRaffle: () => void;
 }
 
-const CancelRaffleModal = ({isOpen, closeModal, cancelRaffle}: CancelRaffleModalProps) => {
+const CancelRaffleModal = ({isOpen, closeModal}: CancelRaffleModalProps) => {
     const account = useAccount();
     const {raffleData} = useRaffleContext();
     const { openConnectModal } = useConnectModal();

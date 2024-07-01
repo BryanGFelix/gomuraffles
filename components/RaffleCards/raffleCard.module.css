@@ -132,6 +132,8 @@
 .download {
     padding-top: 15px;
     text-decoration: underline;
+    background: none;
+    border: none;
 }
 
 .download:hover {

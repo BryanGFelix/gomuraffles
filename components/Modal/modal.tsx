@@ -12,7 +12,7 @@ type ModalProps = {
 const pixelify = Pixelify_Sans({ subsets: ['latin'], weight: '400', });
 
 const Modal = ({ isOpen, onClose, children }: ModalProps) => {
-    const [modalRoot, setModalRoot] = useState(null);
+    const [modalRoot, setModalRoot] = useState<HTMLElement|null>(null);
 
     useEffect(() => {
       let root = document.getElementById('modal-root');

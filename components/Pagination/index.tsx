@@ -1,7 +1,13 @@
 import React from 'react';
 import style from './index.module.css';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+interface PaginationTypes {
+    currentPage: number,
+    totalPages: number,
+    onPageChange: (page: number) => void
+}
+
+const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationTypes) => {
     const pages = [...Array(totalPages).keys()].map(num => num + 1);
     return (
         <div className={style.pagination}>

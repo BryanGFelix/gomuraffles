@@ -5,6 +5,7 @@ import Pagination from '@/components/Pagination';
 import axiosInstance from '@/utils/axios';
 import { PurchaseControlsProvider } from '@/hooks/purchaseControlsContext';
 import JoinedRaffleCard from '@/components/RaffleCards/joinedRaffleCard';
+import { RaffleData } from '@/hooks/raffleContext';
 
 const ParticipatingRafflesPage = () => {
     const account = useAccount();
@@ -52,7 +53,7 @@ const ParticipatingRafflesPage = () => {
                     {raffles.length > 0 &&
                         <>
                             <div className={style.RaffleItems}>
-                                {raffles.map((raffle) => (
+                                {raffles.map((raffle: RaffleData) => (
                                     <PurchaseControlsProvider numTicketsHeld={Number(raffle.userTickets)}>
                                         <JoinedRaffleCard raffleData={raffle}/>
                                     </PurchaseControlsProvider>

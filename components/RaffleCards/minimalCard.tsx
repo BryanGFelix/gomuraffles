@@ -66,7 +66,7 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
                     args: [raffleID]
                 });
 
-                await logTransaction(hash, 'collect_refund', account.address, raffleID);
+                await logTransaction(hash, 'collect_refund', String(account.address), raffleID);
 
                 const status = await waitForTransactionReceipt(hash, 2);
                 if (status === 1) {
@@ -108,7 +108,7 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
                     ))}
                     {winners.length > 10  && <p>...</p>}
                 </div>
-                <p className={styles.download} onClick={downloadExcel}>Download Spreadsheet</p>
+                <p className={styles.download} onClick={() => {downloadExcel}}>Download Spreadsheet</p>
             </>
         } else if (wasCancelled) {
             return <p className={styles.drawing}>Cancelled</p>;

@@ -1,21 +1,9 @@
 import Button from '../Button/Button';
 import styles from './raffleCard.module.css';
-import { useState } from 'react';
-
 import Link from 'next/link';
 import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
-
-type RaffleData = {
-    totalTickets: number;
-    ticketPrice: string;
-    timeStarted: number;
-    duration: number;
-    isActive: boolean;
-    wasCancelled: boolean;
-    id: number;
-    title: string;
-}
+import { RaffleData } from '@/hooks/raffleContext';
 
 const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
     const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, wasCancelled } = raffleData;

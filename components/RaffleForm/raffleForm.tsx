@@ -33,6 +33,28 @@ const CreateRaffleSchema = Yup.object().shape({
         .nullable(),
   });
 
+interface formikValues {
+    ticketPrice: number,
+    numWinners: number,
+    duration: number | null,
+    maxEntries: number | null,
+    maxTickets: number | null,
+    allowDuplicates: boolean,
+    showMaxEntries: boolean,
+    showMaxTickets: boolean,
+}
+
+const initialValues : formikValues = {
+    ticketPrice: 0,
+    numWinners: 1,
+    duration: null,
+    maxEntries: null,
+    maxTickets: null,
+    allowDuplicates: false,
+    showMaxEntries: false,
+    showMaxTickets: false,
+}
+
 const RaffleForm = () => {
     const account = useAccount();
     const [isCreatingRaffle, setIsCreatingRaffle] = useState(false);
@@ -48,7 +70,7 @@ const RaffleForm = () => {
         return futureDate.format('MM-DD-YYYY HH:mm');  // Formatting the date-time string
     }
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values: formikValues) => {
         if (!account.address) {
             if (openConnectModal) {
                 openConnectModal();
@@ -118,16 +140,7 @@ const RaffleForm = () => {
     return (
         <div className={styles.raffleFormContainer}>
             <Formik
-            initialValues={{
-                ticketPrice: 0,
-                numWinners: 1,
-                duration: null,
-                maxEntries: null,
-                maxTickets: null,
-                allowDuplicates: false,
-                showMaxEntries: false,
-                showMaxTickets: false,
-            }}
+            initialValues={initialValues}
             validationSchema={CreateRaffleSchema}
             onSubmit={handleSubmit}
             >

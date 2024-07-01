@@ -20,7 +20,7 @@ interface PurchaseControlsProviderInterface {
   numTicketsHeld: number,
 }
 
-export const PurchaseControlsProvider: React.FC = ({ children, numTicketsHeld }: PurchaseControlsProviderInterface) => {
+export const PurchaseControlsProvider: React.FC<PurchaseControlsProviderInterface> = ({ children, numTicketsHeld }: PurchaseControlsProviderInterface) => {
   const [numTicketsHeldContext, setNumTicketsHeldContext] = useState<number>(Number(numTicketsHeld) || 0);
 
   return (

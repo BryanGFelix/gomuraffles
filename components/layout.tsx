@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import Nav from "./Nav/nav";
 import styles from './layout.module.css';
  
-const Layout = ({ children }) => {
+const Layout = ({ children }: {children: ReactNode}) => {
   return (
     <>
       <Nav />
