@@ -53,7 +53,8 @@ const CancelRaffleModal = ({isOpen, closeModal, cancelRaffle}: CancelRaffleModal
                     await updateTransactionStatus(hash, 'failed');
                 }
             } catch (err) {
-                window.addToast(`Failed to purchase tickets`, 'error');
+                console.log(err)
+                window.addToast(`Failed to cancel tickets`, 'error');
             } finally {
                 setIsCancelling(false);       
             }

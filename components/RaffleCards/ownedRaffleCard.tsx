@@ -41,7 +41,7 @@ const RaffleCard = ({raffleData} : {raffleData: RaffleData}) => {
                     <p>{Number(ticketPrice) * Number(totalTickets)} ETH</p>
                 </div>
                 <div className={styles.raffleTime}>
-                    <TimeLeft timeStarted={timeStarted} duration={duration}/>
+                    <TimeLeft timeStarted={timeStarted} duration={duration} wasCancelled={wasCancelled}/>
                     <RaffleStatus timeStarted={timeStarted} duration={duration} isActive={isActive}/>
                 </div>
             </div>

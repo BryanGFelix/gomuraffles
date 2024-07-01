@@ -7,7 +7,7 @@ import TimeLeft from '../TimeLeft';
 import RaffleStatus from '../Raffles/raffleStatus';
 
 const JoinedRaffleCard = ({raffleData}) => {
-    const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, maxEntries, hasWon, maxTickets, numTicketsOwned } = raffleData;
+    const { totalTickets, ticketPrice, timeStarted, duration, isActive, id, title, maxEntries, hasWon, maxTickets, numTicketsOwned, wasCancelled } = raffleData;
     const { numTicketsHeldContext } = usePurchaseControlsContext();
 
     const totalTicketsAvailable = maxTickets > 0  ? maxTickets - totalTickets : 'Unlimited';
@@ -35,7 +35,7 @@ const JoinedRaffleCard = ({raffleData}) => {
                         <p>{totalTicketsAvailable}</p>
                     </div>
                     <div className={styles.raffleTime}>
-                        <TimeLeft timeStarted={timeStarted} duration={duration}/>
+                        <TimeLeft timeStarted={timeStarted} duration={duration} wasCancelled={wasCancelled}/>
                         <RaffleStatus timeStarted={timeStarted} duration={duration} isActive={isActive}/>
                     </div>
                 </div>

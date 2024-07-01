@@ -16,6 +16,7 @@ type RaffleData = {
     allowDuplicates: boolean,
     isActive: boolean,
     wasCancelled: boolean,
+    refunded: boolean,
     userTickets: number,
     totalTickets: number,
     numWinners: number,

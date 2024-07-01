@@ -5,6 +5,10 @@ import { hasRaffleEnded } from '@/utils/utils';
 import { useEffect, useState } from 'react';
 import { downloadExcel } from './utils';
 import axiosInstance from '@/utils/axios';
+import Button from '../Button/Button';
+import { useAccount, useWriteContract } from 'wagmi';
+import RaffleAbi from '@/abis/Raffle.json';
+import { logTransaction, updateTransactionStatus, waitForTransactionReceipt } from '@/utils/transactions';
 
 type MinimalCardProps = {
     limit: number;
@@ -14,13 +18,22 @@ type MinimalCardProps = {
     timeStarted: number;
     duration: number;
     wasCancelled: boolean;
+    refunded: boolean;
+    numTicketsHeld: number;
 }
 
-const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, duration, wasCancelled}: MinimalCardProps) => {
+const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, duration, wasCancelled, refunded, numTicketsHeld}: MinimalCardProps) => {
+    const account = useAccount();
+
+    const { writeContractAsync } = useWriteContract();
+    
     const raffleHasEnded = hasRaffleEnded(timeStarted, duration);
 
     const [winners, setWinners] = useState([]);
     const [fetching, setFetching] = useState(false);
+    const [refunding, setRefunding] = useState(false);
+    
+    const eligibleForRefund = !refunded && wasCancelled && numTicketsHeld > 0 && Number(ticketPrice) !== 0;
     
     useEffect(() => {
         viewWinners();
@@ -39,6 +52,34 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
             }).catch(() => {
                 setFetching(false);
             });
+        }
+    }
+
+    const refund = async() => {
+        if (eligibleForRefund && !refunding) {
+            setRefunding(true);
+            try {
+                const hash = await writeContractAsync({
+                    address: process.env.CONTRACT_ADDRESS as `0x${string}`,
+                    abi: RaffleAbi,
+                    functionName: 'collectRefund',
+                    args: [raffleID]
+                });
+
+                await logTransaction(hash, 'collect_refund', account.address, raffleID);
+
+                const status = await waitForTransactionReceipt(hash, 2);
+                if (status === 1) {
+                    window.addToast(`Tickets Refunded!`, 'success');
+                } else {
+                    window.addToast(`Failed to process refund`, 'error');
+                    await updateTransactionStatus(hash, 'failed');
+                }
+            } catch (err) {
+                window.addToast(`Failed to process refund`, 'error');
+            } finally {
+                setRefunding(false);       
+            }
         }
     }
 
@@ -71,6 +112,8 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
             </>
         } else if (wasCancelled) {
             return <p className={styles.drawing}>Cancelled</p>;
+        } else if (wasCancelled && refunded) {
+            return <p className={styles.drawing}>Refunded</p>; 
         } else if (isActive && raffleHasEnded) {
             return (
                 <>
@@ -85,17 +128,26 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
 
     return (
         <div className={styles.raffleCardContainer}>
-            <div className={`${styles.raffleCard} ${raffleHasEnded ? styles.raffleHasEnded : ''}`}>
+            <div className={`${styles.raffleCard} ${raffleHasEnded || !eligibleForRefund ? styles.raffleHasEnded : ''}`}>
                 <div className={styles.minimalContent}>
                     {getMinimalContent()}
                 </div>
             </div>
-            {!raffleHasEnded && 
-                <PurchaseTicketsControls
+            {!raffleHasEnded && isActive ?
+            <PurchaseTicketsControls
                     limit={limit}
                     ticketPrice={ticketPrice}
                     raffleID={raffleID}
                 />
+                : 
+                null
+            }
+            {eligibleForRefund ?
+                <Button onClick={refund} disabled={refunding}>
+                    {refunding ? 'Refunding...' : 'Collect Refund'}
+                </Button>
+                :
+                null
             }
         </div>
     )
