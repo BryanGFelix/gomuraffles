@@ -47,7 +47,7 @@ const ParticipatingRafflesPage = () => {
 
     return (
         <div className={style.pageContainer}>
-            <h1 className={style.pageTitle}>Participating Raffles</h1>
+            <h1 className={style.pageTitle}>Joined Raffles</h1>
             {!loading && (
                 <>
                     {raffles.length > 0 &&
