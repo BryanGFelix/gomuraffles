@@ -11,6 +11,19 @@ const nextConfig = {
       config.externals.push('pino-pretty', 'lokijs', 'encoding');
       return config;
     },
+    async headers() {
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'Content-Security-Policy',
+              value: "connect-src 'self' https://client.warpcast.com/ https://stream.warpcast.com wss://ws.warpcast.com/ https://relay.walletconnect.com/ wss://relay.walletconnect.com/ https://explorer-api.walletconnect.com/ wss://www.walletlink.org/ https://*.cloudflarestream.com https://cloudflare-eth.com;",
+            },
+          ],
+        },
+      ];
+    },
   };
 
 export default nextConfig;
