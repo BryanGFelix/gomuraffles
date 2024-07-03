@@ -180,10 +180,7 @@ app.frame('/:id', async(c) => {
 })
 
 app.frame('/purchased/check', async(c) => {
-  const {transactionId, inputText} = c;
-  const status = await waitForTransactionReceipt(transactionId as `0x${string}`, 1);
-
-  const purchaseText = status === 1 && `Purchased ${inputText} Ticket(s)`;
+  const {inputText} = c;
 
   return c.res({
     image: (
@@ -203,7 +200,7 @@ app.frame('/purchased/check', async(c) => {
           fontFamily: 'Pixelfy Sans',
         }}
       >
-        <Box><p style={{fontSize: '60px', margin: '0 auto', fontWeight:'bold'}}>{purchaseText}</p></Box>
+        <Box><p style={{fontSize: '60px', margin: '0 auto', fontWeight:'bold'}}>{`Purchased ${inputText} Ticket(s)`}</p></Box>
       </div>
     ),
     intents: [
