@@ -18,7 +18,24 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://client.warpcast.com/ https://stream.warpcast.com wss://ws.warpcast.com/ https://relay.walletconnect.com/ wss://relay.walletconnect.com/ https://explorer-api.walletconnect.com/ wss://www.walletlink.org/ https://*.cloudflarestream.com https://cloudflare-eth.com https://gomurafflesapi.onrender.com;",
+            value: `
+              default-src 'self';
+              script-src 'self';
+              style-src 'self';
+              img-src 'self';
+              connect-src 'self'
+                https://client.warpcast.com/
+                https://stream.warpcast.com
+                wss://ws.warpcast.com/
+                https://relay.walletconnect.com/
+                wss://relay.walletconnect.com/
+                https://explorer-api.walletconnect.com/
+                wss://www.walletlink.org/
+                https://*.cloudflarestream.com
+                https://cloudflare-eth.com
+                https://gomurafflesapi.onrender.com
+                https://sepolia.base.org;
+            `.replace(/\s+/g, ' ').trim()
           },
         ],
       },
