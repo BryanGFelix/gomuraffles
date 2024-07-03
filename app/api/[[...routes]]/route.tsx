@@ -70,7 +70,7 @@ app.frame('/:id', async(c) => {
       return err;
   });
 
-  const ticketPriceFormatted = Number(ticketPrice) > 0 ? ticketPrice : 0;
+  const ticketPriceFormatted = Number(ticketPrice) > 0 ? `${ticketPrice} ETH` : 'FREE';
 
   const totalTicketsAvailable = maxTotalTickets > 0  ? maxTotalTickets - totalTickets : 'Unlimited';
 
@@ -78,9 +78,8 @@ app.frame('/:id', async(c) => {
 
   const timeLeftColor = getTimeLeftColor(timeStarted, duration);
 
-  return c.res({
-    image: (
-      <div
+  const generalImage = (
+    <div
         style={{
           border: '20px dashed black',
           background: 'white',
@@ -118,7 +117,7 @@ app.frame('/:id', async(c) => {
               Ticket Price -
           </p>
           <p style={{fontSize: '38px', margin: 0, marginLeft: '10px'}}>
-            {ticketPriceFormatted} ETH
+            {ticketPriceFormatted}
           </p>
         </Box>
         <Box display='flex' flexWrap='wrap' flexDirection='row' alignItems='center'>
@@ -156,13 +155,26 @@ app.frame('/:id', async(c) => {
             </Box>
         </div>  
       </div>
-    ),
-    intents: [
-      <TextInput placeholder='How many tickets would you like?'/>,
-      <Button.Transaction action='/' target={`/purchaseTickets/${id}/${ticketPriceFormatted}`}>Purchase</Button.Transaction>,
-      <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
-    ],
-  })
+  );
+
+  if (isActive) {
+    return c.res({
+      image: generalImage,
+      intents: [
+        <TextInput placeholder='How many tickets would you like?'/>,
+        <Button.Transaction target={`/purchaseTickets/${id}/${ticketPriceFormatted}`}>Purchase</Button.Transaction>,
+        <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
+      ],
+    })
+  } else {
+    return c.res({
+      image: generalImage,
+      intents: [,,
+        <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
+        <Button.Redirect location={`gomuraffles.com}`}>Create Raffle</Button.Redirect>
+      ],
+    })
+  }
 })
 
 app.transaction('/purchaseTickets/:id/:ticketPrice', async (c) => {
@@ -170,7 +182,6 @@ app.transaction('/purchaseTickets/:id/:ticketPrice', async (c) => {
 
   if (inputText === '' || !Number.isInteger(Number(inputText)) || Number(inputText) <= 0) return c.error({message: 'Must provide a valid number > 0'});
 
-  
   const ticketPrice = c.req.param('ticketPrice')
   const raffleID = c.req.param('id');
 
