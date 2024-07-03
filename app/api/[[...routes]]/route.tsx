@@ -70,7 +70,8 @@ app.frame('/:id', async(c) => {
       return err;
   });
 
-  const ticketPriceFormatted = Number(ticketPrice) > 0 ? `${ticketPrice} ETH` : 'FREE';
+  const ticketPriceFormattedText = Number(ticketPrice) > 0 ? `${ticketPrice} ETH` : 'FREE';
+  const ticketPriceFormattedParam = Number(ticketPrice) > 0 ? ticketPrice : 0;
 
   const totalTicketsAvailable = maxTotalTickets > 0  ? maxTotalTickets - totalTickets : 'Unlimited';
 
@@ -117,7 +118,7 @@ app.frame('/:id', async(c) => {
               Ticket Price -
           </p>
           <p style={{fontSize: '38px', margin: 0, marginLeft: '10px'}}>
-            {ticketPriceFormatted}
+            {ticketPriceFormattedText}
           </p>
         </Box>
         <Box display='flex' flexWrap='wrap' flexDirection='row' alignItems='center'>
@@ -162,7 +163,7 @@ app.frame('/:id', async(c) => {
       image: generalImage,
       intents: [
         <TextInput placeholder='How many tickets would you like?'/>,
-        <Button.Transaction target={`/purchaseTickets/${id}/${ticketPriceFormatted}`}>Purchase</Button.Transaction>,
+        <Button.Transaction target={`/purchaseTickets/${id}/${ticketPriceFormattedParam}`}>Purchase Tickets</Button.Transaction>,
         <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
       ],
     })
@@ -171,7 +172,7 @@ app.frame('/:id', async(c) => {
       image: generalImage,
       intents: [
         <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
-        <Button.Redirect location={`gomuraffles.com}`}>Create Raffle</Button.Redirect>
+        <Button.Redirect location={`gomuraffles.com`}>Create Raffle</Button.Redirect>,
       ],
     })
   }
