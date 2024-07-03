@@ -11,6 +11,7 @@ import { ethers } from 'ethers';
 import { formatTimeLeft, hasRaffleEnded } from '@/utils/utils';
 import { Box } from '../ui'
 import axiosInstance from '@/utils/axios'
+import { waitForTransactionReceipt } from '@/utils/transactions';
 
 const app = new Frog({
   assetsPath: '/',
@@ -163,7 +164,7 @@ app.frame('/:id', async(c) => {
       image: generalImage,
       intents: [
         <TextInput placeholder='How many tickets would you like?'/>,
-        <Button.Transaction target={`/purchaseTickets/${id}/${ticketPriceFormattedParam}`}>Purchase Tickets</Button.Transaction>,
+        <Button.Transaction action='/purchased/check' target={`/purchaseTickets/${id}/${ticketPriceFormattedParam}`}>Purchase Tickets</Button.Transaction>,
         <Button.Redirect location={`https://gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
       ],
     })
@@ -176,6 +177,41 @@ app.frame('/:id', async(c) => {
       ],
     })
   }
+})
+
+app.frame('/purchased/check', async(c) => {
+  const {transactionId, inputText} = c;
+  const status = await waitForTransactionReceipt(transactionId as `0x${string}`, 1);
+
+  const purchaseText = status === 1 && `Purchased ${inputText} Ticket(s)`;
+
+  return c.res({
+    image: (
+      <div
+        style={{
+          border: '20px dashed black',
+          background: 'white',
+          backgroundSize: '100% 100%',
+          display: 'flex',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+          height: '100%',
+          justifyContent: 'center',
+          textAlign: 'center',
+          width: '100%',
+          padding: '50px',
+          fontFamily: 'Pixelfy Sans',
+        }}
+      >
+        <Box><p style={{fontSize: '60px', margin: '0 auto', fontWeight:'bold'}}>{purchaseText}</p></Box>
+      </div>
+    ),
+    intents: [
+      <Button.Reset>Purchase More</Button.Reset>,
+      <Button.Redirect location={`gomuraffles.com/raffle/`}>View Details</Button.Redirect>,
+      <Button.Redirect location={`gomuraffles.com`}>Create Raffle</Button.Redirect>,
+    ]
+  })
 })
 
 app.transaction('/purchaseTickets/:id/:ticketPrice', async (c) => {
