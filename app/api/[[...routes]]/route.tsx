@@ -205,8 +205,8 @@ app.frame('/purchased/check', async(c) => {
     ),
     intents: [
       <Button.Reset>Purchase More</Button.Reset>,
-      <Button.Redirect location={`gomuraffles.com/raffle/`}>View Details</Button.Redirect>,
-      <Button.Redirect location={`gomuraffles.com`}>Create Raffle</Button.Redirect>,
+      <Button.Redirect location={`https://gomuraffles.com/raffle/`}>View Details</Button.Redirect>,
+      <Button.Redirect location={`https://gomuraffles.com`}>Create Raffle</Button.Redirect>,
     ]
   })
 })
