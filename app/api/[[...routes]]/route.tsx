@@ -169,7 +169,7 @@ app.frame('/:id', async(c) => {
   } else {
     return c.res({
       image: generalImage,
-      intents: [,,
+      intents: [
         <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
         <Button.Redirect location={`gomuraffles.com}`}>Create Raffle</Button.Redirect>
       ],
