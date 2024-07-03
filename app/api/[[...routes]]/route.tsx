@@ -164,15 +164,15 @@ app.frame('/:id', async(c) => {
       intents: [
         <TextInput placeholder='How many tickets would you like?'/>,
         <Button.Transaction target={`/purchaseTickets/${id}/${ticketPriceFormattedParam}`}>Purchase Tickets</Button.Transaction>,
-        <Button.Link href={`gomuraffles.com/raffle/${id}`}>View Details</Button.Link>,
+        <Button.Redirect location={`https://gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
       ],
     })
   } else {
     return c.res({
       image: generalImage,
       intents: [
-        <Button.Link href={`gomuraffles.com/raffle/${id}`}>View Details</Button.Link>,
-        <Button.Link href={`gomuraffles.com`}>Create Raffle</Button.Link>,
+        <Button.Redirect location={`https://gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
+        <Button.Redirect location={`https://gomuraffles.com`}>Create Raffle</Button.Redirect>,
       ],
     })
   }
