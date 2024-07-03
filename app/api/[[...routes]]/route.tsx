@@ -22,7 +22,7 @@ const app = new Frog({
         source: 'google',
       },
     ]
-  }
+  },
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -48,9 +48,8 @@ const getTimeLeftColor = (timeStarted: number, duration: number) => {
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
-app.frame('/raffle/:id', async(c) => {
+app.frame('/:id', async(c) => {
   const id = c.req.param('id');
-  const { deriveState } = c
 
   const {
     isActive,
@@ -160,14 +159,13 @@ app.frame('/raffle/:id', async(c) => {
     ),
     intents: [
       <TextInput placeholder='How many tickets would you like?'/>,
-      <Button.Transaction target={`/purchaseTickets/raffle/${id}/${ticketPriceFormatted}`}>Purchase</Button.Transaction>,
-      <Button.Redirect location={`https://www.gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
-      <Button.Redirect location='https://www.gomuraffles.com/'>Create Raffle</Button.Redirect>
+      <Button.Transaction action='/' target={`/purchaseTickets/${id}/${ticketPriceFormatted}`}>Purchase</Button.Transaction>,
+      <Button.Redirect location={`gomuraffles.com/raffle/${id}`}>View Details</Button.Redirect>,
     ],
   })
 })
 
-app.transaction('/purchaseTickets/raffle/:id/:ticketPrice', async (c) => {
+app.transaction('/purchaseTickets/:id/:ticketPrice', async (c) => {
   const { inputText } = c;
 
   if (inputText === '' || !Number.isInteger(Number(inputText)) || Number(inputText) <= 0) return c.error({message: 'Must provide a valid number > 0'});
