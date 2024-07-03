@@ -21,20 +21,10 @@ const nextConfig = {
             value: `
               default-src 'self';
               script-src 'self';
-              style-src 'self';
+              style-src 'self' 'unsafe-inline' https://verify.walletconnect.com;
               img-src 'self';
-              connect-src 'self'
-                https://client.warpcast.com/
-                https://stream.warpcast.com
-                wss://ws.warpcast.com/
-                https://relay.walletconnect.com/
-                wss://relay.walletconnect.com/
-                https://explorer-api.walletconnect.com/
-                wss://www.walletlink.org/
-                https://*.cloudflarestream.com
-                https://cloudflare-eth.com
-                https://gomurafflesapi.onrender.com
-                https://sepolia.base.org;
+              connect-src 'self' https://client.warpcast.com/ https://stream.warpcast.com wss://ws.warpcast.com/ https://relay.walletconnect.com/ wss://relay.walletconnect.com/ https://explorer-api.walletconnect.com/ wss://www.walletlink.org/ https://*.cloudflarestream.com https://cloudflare-eth.com https://gomurafflesapi.onrender.com https://sepolia.base.org;
+              frame-src 'self' https://verify.walletconnect.com;
             `.replace(/\s+/g, ' ').trim()
           },
         ],
