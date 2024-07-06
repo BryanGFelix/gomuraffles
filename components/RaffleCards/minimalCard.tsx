@@ -22,6 +22,10 @@ type MinimalCardProps = {
     numTicketsHeld: number;
 }
 
+type Winner = {
+    address: string;
+}
+
 const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, duration, wasCancelled, refunded, numTicketsHeld}: MinimalCardProps) => {
     const account = useAccount();
 
@@ -103,8 +107,8 @@ const MinimalCard = ({limit, ticketPrice, raffleID, isActive, timeStarted, durat
             return <>
                 <h2 className={styles.title}>Winners ({winners.length})</h2>
                 <div className={styles.winnerList}>
-                    {winners.slice(0, 10).map((winner, index) => (
-                        <p className={styles.address}>{index + 1}. {winner}</p>
+                    {winners.slice(0, 10).map((winner: Winner, index) => (
+                        <p className={styles.address}>{index + 1}. {winner.address}</p>
                     ))}
                     {winners.length > 10  && <p>...</p>}
                 </div>

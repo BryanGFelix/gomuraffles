@@ -70,7 +70,7 @@ const RafflePage = () => {
                                     numTicketsHeld={userTickets}
                                 />
                                 <div className={styles.raffleDetails}>
-                                    {allowDuplicates && <p className={styles.duplicates}>Allows Duplicates</p>}
+                                    {allowDuplicates ? <p className={styles.duplicates}>Allows Duplicates</p> : null}
                                     <h3 className={styles.sectionHeader}>Raffle Details</h3>
                                     <div className={styles.miniSection}>
                                         <h4 className={styles.sectionSubHeader}>Owned By</h4>

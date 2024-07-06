@@ -145,6 +145,7 @@
     overflow: hidden;
     white-space: nowrap;
     max-width: 270px;
+    font-size: 18px;
 }
 
 .raffleID {
