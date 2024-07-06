@@ -45,7 +45,7 @@ const RafflePage = () => {
             {!fetchingRaffle ? !raffleData && <p className={styles.loadingText}>Could not retrieve Raffle data</p> : null}
             {id ?
                 <div>
-                    {owner === account.address && isActive ? (
+                    {account && owner === account.address && isActive ? (
                         <div className={styles.ownerControlsContainer}>
                             <OwnerControls/>
                         </div>

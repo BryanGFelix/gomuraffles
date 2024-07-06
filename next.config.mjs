@@ -20,7 +20,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-inline';
+              script-src 'self' 'unsafe-inline' 'unsafe-eval';
               style-src 'self' 'unsafe-inline' https://verify.walletconnect.com;
               img-src 'self' https://verify.walletconnect.com data: blob:;
               connect-src 'self' https://client.warpcast.com/ https://stream.warpcast.com wss://ws.warpcast.com/ https://relay.walletconnect.com/ wss://relay.walletconnect.com/ https://explorer-api.walletconnect.com/ wss://www.walletlink.org/ https://*.cloudflarestream.com https://cloudflare-eth.com https://gomurafflesapi.onrender.com https://sepolia.base.org https://base-sepolia.g.alchemy.com;
